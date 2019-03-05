@@ -1,7 +1,7 @@
 class ParkingLot
   attr_reader :capacity, :parking_slots
 
-  def initializer(capacity)
+  def initialize(capacity)
     @capacity = capacity
     @parking_slots = (1..capacity).collect do |slot_no|
       ParkingSlot.new(slot_no)
@@ -13,8 +13,8 @@ class ParkingLot
     free_slots = self.parking_slots.select do |slot|
       slot.is_free?
     end
-    return print_msg('Sorry, parking lot is full') if free_slots.nil?
-    first_slot = free_slots.sort{|slot| slot.slot_number}.first
+    return print_msg('Sorry, parking lot is full') if free_slots.empty?
+    first_slot = free_slots.sort_by{|slot| slot.slot_number}.first
     first_slot.park(reg_no, colour)
   end
 
@@ -22,7 +22,7 @@ class ParkingLot
     slot = parking_slots.select do |slot|
       slot.slot_number == slot_no
     end
-    slot.clear
+    slot.first.unallocate
   end
 
   def find_vehicle(colour)
@@ -30,19 +30,28 @@ class ParkingLot
       slot.is_allocated? && slot.vehicle_colour(colour)
     end
     return print_msg('Not found') if slots.empty?
+    binding.pry
     collect_number(slots)
   end
 
-  def colect_number(slots)
+  def collect_number(slots)
     reg_numbers = slots.collect do |slot|
       slot.vehicle_reg_no
     end
-    reg_numbers.join(',')
+    p reg_numbers.join(',')
   end
 
-  def find_slot(reg_no)
+  def find_slot_for_reg_no(reg_no)
     slots = self.parking_slots.select do |slot|
       slot.is_allocated? && slot.vehicle.match_reg_no(reg_no)
+    end
+    return print_msg('Not found') if slots.empty?
+    puts slots.map(&:slot_number)
+  end
+
+  def find_slot_for_colour(colour)
+    slots = self.parking_slots.select do |slot|
+      slot.is_allocated? && slot.vehicle_colour(colour)
     end
     return print_msg('Not found') if slots.empty?
     puts slots.map(&:slot_number)
