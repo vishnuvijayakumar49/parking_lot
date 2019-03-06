@@ -30,7 +30,6 @@ class ParkingLot
       slot.is_allocated? && slot.vehicle_colour(colour)
     end
     return print_msg('Not found') if slots.empty?
-    binding.pry
     collect_number(slots)
   end
 
@@ -60,7 +59,7 @@ class ParkingLot
   def status
     p "Slot No.  Registration No     Colour"
     self.parking_slots.each do |slot|
-      p "#{slot.slot_number}    #{slot.vehicle.reg_number}   #{slot.vehicle.colour}" if slot.is_allocated?
+      p "#{slot.slot_number}        #{slot.vehicle.reg_number}        #{slot.vehicle.colour}" if slot.is_allocated?
     end
   end
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require 'readline'
-require 'pry'
 require_relative '../lib/parking_lot'
 require_relative '../lib/parking_slot'
 require_relative '../lib/vehicle'
